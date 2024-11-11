@@ -1,14 +1,15 @@
-import express from 'express';
+import express from "express";
+import { bookRoutes } from "../modules/Book/book.routes";
 
 const router = express.Router();
 
 const moduleRoutes = [
-    {
-        path:,
-        route:
-    }
+  {
+    path: "/books",
+    route: bookRoutes,
+  },
 ];
 
-moduleRoutes.forEach(route => router.use(route.path, route.route))
+moduleRoutes.forEach((route) => router.use(route.path, route.route));
 
 export default router;
