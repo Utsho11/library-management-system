@@ -1,5 +1,7 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../../../shared/prisma";
-import { TBook } from "../../types";
+import { TBook, TErrorResponse } from "../../types";
+import { ErrorResponse } from "../../middlewares/globalErrorHandler";
 
 const createBookIntoDB = async (payload: TBook) => {
   const result = await prisma.book.create({ data: payload });
@@ -14,24 +16,91 @@ const getAllBooksFromDB = async () => {
 };
 
 const getSingleBookfromDB = async (bookId: string) => {
-  const result = await prisma.book.findUnique({
-    where: {
-      bookId: bookId,
-    },
-  });
+  try {
+    const result = await prisma.book.findUniqueOrThrow({
+      where: {
+        bookId: bookId,
+      },
+    });
 
-  return result;
+    return result;
+  } catch (error) {
+    const statusCode =
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+        ? 404
+        : 500;
+    const errorMessage =
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+        ? "Book not found"
+        : "An error occurred while updating the book";
+
+    throw new ErrorResponse(statusCode, errorMessage);
+  }
 };
 
 const updateBookIntoDB = async (bookId: string, payload: Partial<TBook>) => {
-  const result = await prisma.book.update({
-    where: {
-      bookId: bookId,
-    },
-    data: payload,
-  });
+  try {
+    await prisma.book.findUniqueOrThrow({
+      where: {
+        bookId,
+      },
+    });
 
-  return result;
+    const result = await prisma.book.update({
+      where: {
+        bookId: bookId,
+      },
+      data: payload,
+    });
+
+    return result;
+  } catch (error) {
+    const statusCode =
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+        ? 404
+        : 500;
+    const errorMessage =
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+        ? "Book not found"
+        : "An error occurred while updating the book";
+
+    throw new ErrorResponse(statusCode, errorMessage);
+  }
+};
+
+const deleteBookFromDB = async (bookId: string) => {
+  try {
+    await prisma.book.findUniqueOrThrow({
+      where: {
+        bookId,
+      },
+    });
+
+    const result = await prisma.book.delete({
+      where: {
+        bookId: bookId,
+      },
+    });
+
+    return result;
+  } catch (error) {
+    const statusCode =
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+        ? 404
+        : 500;
+    const errorMessage =
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+        ? "Book not found"
+        : "An error occurred while updating the book";
+
+    throw new ErrorResponse(statusCode, errorMessage);
+  }
 };
 
 export const bookServices = {
@@ -39,4 +108,5 @@ export const bookServices = {
   getAllBooksFromDB,
   getSingleBookfromDB,
   updateBookIntoDB,
+  deleteBookFromDB,
 };

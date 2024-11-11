@@ -1,16 +1,36 @@
 import { NextFunction, Request, Response } from "express";
 
+// Custom Error Response type to ensure consistent structure
+class ErrorResponse extends Error {
+  public success: boolean;
+  public status: number;
+  public message: string;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.success = false;
+    this.status = status;
+    this.message = message;
+  }
+}
+
 const globalErrorHandler = (
   err: any,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  res.status(500).json({
+  // Check if error has a status and message, otherwise use defaults
+
+  const statusCode = err.status || 500;
+  const message = err.message || "Something went wrong!";
+
+  // Send error response
+  res.status(statusCode).json({
     success: false,
-    message: err.name || "Something went wrong!",
-    error: err,
+    status: statusCode,
+    message,
   });
 };
 
-export default globalErrorHandler;
+export { ErrorResponse, globalErrorHandler };
