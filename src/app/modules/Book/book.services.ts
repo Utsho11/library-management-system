@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../../shared/prisma";
-import { TBook, TErrorResponse } from "../../types";
+import { TBook } from "../../types";
 import { ErrorResponse } from "../../middlewares/globalErrorHandler";
 
 const createBookIntoDB = async (payload: TBook) => {
@@ -31,8 +31,8 @@ const getSingleBookfromDB = async (bookId: string) => {
     const errorMessage =
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2025"
-        ? "Book not found"
-        : "An error occurred while updating the book";
+        ? "Book is not found!"
+        : "An error occurred while retrieving the book";
 
     throw new ErrorResponse(statusCode, errorMessage);
   }
@@ -59,7 +59,7 @@ const updateBookIntoDB = async (bookId: string, payload: Partial<TBook>) => {
     const errorMessage =
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2025"
-        ? "Book not found"
+        ? "Book is not found!"
         : "An error occurred while updating the book";
 
     throw new ErrorResponse(statusCode, errorMessage);
@@ -86,8 +86,8 @@ const deleteBookFromDB = async (bookId: string) => {
     const errorMessage =
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2025"
-        ? "Book not found"
-        : "An error occurred while updating the book";
+        ? "Book is not found!"
+        : "An error occurred while deleting the book";
 
     throw new ErrorResponse(statusCode, errorMessage);
   }

@@ -6,12 +6,6 @@ export type TBook = {
   availableCopies: number;
 };
 
-export type TErrorResponse = {
-  success: boolean;
-  status: number;
-  message: string;
-};
-
 export type TMember = {
   name: string;
   email: string;

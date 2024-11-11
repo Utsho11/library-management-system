@@ -6,7 +6,7 @@ const router = express.Router();
 router.post("/", memberControllers.createMember);
 router.get("/", memberControllers.getAllMember);
 router.get("/:memberId", memberControllers.getSingleMember);
-router.put("/:bookId");
-router.delete("/:bookId");
+router.put("/:memberId", memberControllers.updateMember);
+router.delete("/:memberId", memberControllers.deleteMember);
 
 export const memberRoutes = router;
