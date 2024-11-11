@@ -11,3 +11,10 @@ export type TErrorResponse = {
   status: number;
   message: string;
 };
+
+export type TMember = {
+  name: string;
+  email: string;
+  phone: string;
+  membershipDate: string;
+};

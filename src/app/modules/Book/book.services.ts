@@ -18,9 +18,7 @@ const getAllBooksFromDB = async () => {
 const getSingleBookfromDB = async (bookId: string) => {
   try {
     const result = await prisma.book.findUniqueOrThrow({
-      where: {
-        bookId: bookId,
-      },
+      where: { bookId },
     });
 
     return result;
@@ -43,15 +41,11 @@ const getSingleBookfromDB = async (bookId: string) => {
 const updateBookIntoDB = async (bookId: string, payload: Partial<TBook>) => {
   try {
     await prisma.book.findUniqueOrThrow({
-      where: {
-        bookId,
-      },
+      where: { bookId },
     });
 
     const result = await prisma.book.update({
-      where: {
-        bookId: bookId,
-      },
+      where: { bookId },
       data: payload,
     });
 
@@ -75,15 +69,11 @@ const updateBookIntoDB = async (bookId: string, payload: Partial<TBook>) => {
 const deleteBookFromDB = async (bookId: string) => {
   try {
     await prisma.book.findUniqueOrThrow({
-      where: {
-        bookId,
-      },
+      where: { bookId },
     });
 
     const result = await prisma.book.delete({
-      where: {
-        bookId: bookId,
-      },
+      where: { bookId },
     });
 
     return result;
