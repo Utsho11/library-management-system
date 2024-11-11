@@ -72,11 +72,19 @@ const deleteBookFromDB = async (bookId: string) => {
       where: { bookId },
     });
 
-    const result = await prisma.book.delete({
-      where: { bookId },
-    });
+    await prisma.$transaction(async (transactionClient) => {
+      await transactionClient.borrowRecord.deleteMany({
+        where: {
+          bookId,
+        },
+      });
 
-    return result;
+      await transactionClient.book.delete({
+        where: {
+          bookId,
+        },
+      });
+    });
   } catch (error) {
     const statusCode =
       error instanceof Prisma.PrismaClientKnownRequestError &&

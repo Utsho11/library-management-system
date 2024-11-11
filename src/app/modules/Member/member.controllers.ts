@@ -49,7 +49,7 @@ const updateMember = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteMember = catchAsync(async (req: Request, res: Response) => {
-  const result = await memberServices.deleteMemberFromDB(req.params.memberId);
+  await memberServices.deleteMemberFromDB(req.params.memberId);
   sendResponse(res, {
     statusCode: 200,
     success: true,
